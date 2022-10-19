@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using TestCrudService.Api.Common.Interfaces;
+using TestCrudService.Api.Dal.Entity;
 
 namespace TestCrudService.Api.Controllers;
 
@@ -11,11 +13,14 @@ public class WeatherForecastController : ControllerBase
         "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
     };
 
+    private readonly ITestRepository _testRepository;
+
     private readonly ILogger<WeatherForecastController> _logger;
 
-    public WeatherForecastController(ILogger<WeatherForecastController> logger)
+    public WeatherForecastController(ILogger<WeatherForecastController> logger, ITestRepository testRepository)
     {
         _logger = logger;
+        _testRepository = testRepository;
     }
 
     [HttpGet(Name = "GetWeatherForecast")]
@@ -29,4 +34,27 @@ public class WeatherForecastController : ControllerBase
             })
             .ToArray();
     }
+
+    [HttpGet("SetUser")]
+    public async Task GetUser()
+    {
+        List<DocUser> list = new List<DocUser>(100000);
+        for (int i = 0; i < 100000; i++)
+        {
+            list.Add(new DocUser
+            {
+                Id = 0,
+                Name = "Test",
+                Age = 1
+            }); 
+        }
+
+        await _testRepository.SaveListObj(list);
+    } 
+    
+    [HttpGet("GetUser")]
+    public async Task<IEnumerable<DocUser>> GetUsers()
+    {
+        return await _testRepository.GetUserList();
+    } 
 }
