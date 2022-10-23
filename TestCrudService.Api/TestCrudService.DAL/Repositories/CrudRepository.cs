@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using TestCrudService.Common.DTO;
@@ -34,9 +35,18 @@ public class CrudRepository : BaseRepository<TestDbContext>, ICrudRepository
         
     }
 
-    public Task SaveRefEducationDto(RefEducationDto dto)
+    public async Task SaveRefEducationDto(RefEducationDto dto)
     {
-        throw new NotImplementedException();
+        var entity = _refMapper.MapDtoToEntity(dto);
+        var education = await DoQueryAsync(async (ctx, token) =>
+        {
+            return ctx.Educations.Local.Any(x => x.Name == entity.Name);
+        });
+        if (!education)
+            await DoSaveAsync((ctx, token) =>
+            {
+                ctx.AddAsync(entity, token);
+            });
     }
 
     public async Task SaveRefEducationDtoList(List<RefEducationDto> listDto)
@@ -64,40 +74,27 @@ public class CrudRepository : BaseRepository<TestDbContext>, ICrudRepository
         throw new NotImplementedException();
     }
 
-    public async Task<List<DocPersonDto>> GetDocPersonDtoList(int[] educationArray)
+    public async Task<List<DocPersonDto>> GetDocPersonDtoList(int educationId)
     {
         var list = await DoQueryAsync(async (ctx, token) =>
         {
-            var query2 = ctx.PersonSet
-                .Include(i => i.DocEducationLine)!
-                .ThenInclude(e => e.Education)
-                .Where(s => s.DocEducationLine.Any(x => 
-                    x.EducationId == educationArray[0] &&
-                    x.EducationId == educationArray[1]
-                    ));
             var query3 = ctx.PersonSet
-                    .Where(x => x.DocEducationLine.Any(i => 
-                        i.EducationId == educationArray[0] ||
-                        i.EducationId == educationArray[1]))
                 .Include(i => i.DocEducationLine)!
                 .ThenInclude(e => e.Education)
-                ;
+                .AsQueryable();
+            if (educationId != 0)
+            {
+                query3 = query3
+                    .Where(x => x.DocEducationLine!.All(y => y.EducationId == educationId))
+                    .Where(c => c.DocEducationLine.Count > 0);
+            }
+            else
+            {
+                query3 = query3.Where(x => !x.DocEducationLine!.Any());
+            }
 
 
             return await query3.ToListAsync(token);
-        });
-        return _docMapper.MapEntityToDtoList(list);
-    }
-
-    public async Task<List<DocPersonDto>> GetDocPersonDtoWithoutEducation()
-    {
-        //Этот запрос совершенно не нравиться, нужно будет подумать как сделать нормально (на sql ничего сложного)
-        var list = await DoQueryAsync(async (ctx, token) =>
-        {
-            var query = ctx.PersonSet
-                .Include(i => i.DocEducationLine)
-                .Where(x => !x.DocEducationLine!.Any());
-            return await query.ToListAsync(token);
         });
         return _docMapper.MapEntityToDtoList(list);
     }

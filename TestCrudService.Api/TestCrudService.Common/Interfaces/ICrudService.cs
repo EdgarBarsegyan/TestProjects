@@ -8,6 +8,6 @@ public interface ICrudService
     Task SaveDocPersonDtoList(List<DocPersonDto> dtoList);
     Task SaveRefEducationDto(RefEducationDto dto);
     Task SaveRefEducationDtoList(List<RefEducationDto> dtoList);
-    Task<List<DocPersonDto>> GetPersonList(int[] educationArray);
+    Task<List<DocPersonDto>> GetPersonList(int educationId);
     Task<List<RefEducationDto>> GetEducationList();
 }

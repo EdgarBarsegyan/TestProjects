@@ -11,6 +11,5 @@ public interface ICrudRepository
     Task<RefEducationDto> GetRefEducation(int educationId);
     Task<List<RefEducationDto>> GetRefEducationList();
     Task<DocPersonDto> GetDocPersonDto(int personId);
-    Task<List<DocPersonDto>> GetDocPersonDtoList(int[] educationArray);
-    Task<List<DocPersonDto>> GetDocPersonDtoWithoutEducation();
+    Task<List<DocPersonDto>> GetDocPersonDtoList(int educationId);
 }

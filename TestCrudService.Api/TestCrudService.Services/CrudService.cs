@@ -23,9 +23,9 @@ public class CrudService : ICrudService
         await _crudRepository.SaveDocPersonDtoList(dtoList);
     }
 
-    public Task SaveRefEducationDto(RefEducationDto dto)
+    public async Task SaveRefEducationDto(RefEducationDto dto)
     {
-        throw new NotImplementedException();
+        await _crudRepository.SaveRefEducationDto(dto);
     }
 
     public async Task SaveRefEducationDtoList(List<RefEducationDto> dtoList)
@@ -33,10 +33,9 @@ public class CrudService : ICrudService
         await _crudRepository.SaveRefEducationDtoList(dtoList);
     }
 
-    public async Task<List<DocPersonDto>> GetPersonList(int[] educationArray)
+    public async Task<List<DocPersonDto>> GetPersonList(int educationId)
     {
-        return await _crudRepository.GetDocPersonDtoList(educationArray);
-        // return await _crudRepository.GetDocPersonDtoWithoutEducation();
+        return await _crudRepository.GetDocPersonDtoList(educationId);
     }
 
     public async Task<List<RefEducationDto>> GetEducationList()
