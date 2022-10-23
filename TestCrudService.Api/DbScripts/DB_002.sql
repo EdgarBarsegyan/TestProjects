@@ -2,7 +2,6 @@
 BEGIN TRANSACTION
     use TestCrudApi
 /*Создаем справочники*/
-/*Создание таблицы RefCurrency*/
 IF EXISTS( 
     SELECT * FROM sys.objects WHERE name = N'Ref_Education' and TYPE = 'U' AND schema_id = 1
 ) 
@@ -19,7 +18,6 @@ ELSE BEGIN
     exec sp_addextendedproperty @name = N'Name', @value = N'Название образования', @level0type = N'Schema', @level0name = 'dbo', @level1type = N'Table', @level1name = 'Ref_Education'
 END
      
-/*Создание таблицы Doc_InternalTransactionSolar*/
 IF EXISTS( SELECT * FROM sys.objects WHERE name = N'Doc_Person' and TYPE = 'U' AND schema_id = 1
 ) 
 BEGIN 
