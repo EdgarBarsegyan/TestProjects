@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace TestCrudService.Api.Dal.Repositories.Base;
+namespace TestCrudService.DAL.Repositories.Base;
 
-internal abstract class BaseRepository<TContext> where TContext : DbContext
+public abstract class BaseRepository<TContext> where TContext : DbContext
 {
     private readonly TContext _context;
 

@@ -12,7 +12,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Services" />
+      <ProjectReference Include="..\TestCrudService.Common\TestCrudService.Common.csproj" />
+      <ProjectReference Include="..\TestCrudService.DAL\TestCrudService.DAL.csproj" />
+      <ProjectReference Include="..\TestCrudService.Services\TestCrudService.Services.csproj" />
     </ItemGroup>
 
 </Project>
